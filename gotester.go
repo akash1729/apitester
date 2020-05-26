@@ -1,4 +1,4 @@
-package golang-api-testing
+package apitester
 
 import (
 	"bytes"
@@ -8,7 +8,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/akash1729/golang-api-testing/utils"
+	"github.com/akash1729/apitester/utils"
 )
 
 type TestCase struct {
