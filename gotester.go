@@ -26,7 +26,7 @@ type TestCase struct {
 
 func RunTest(testCase *TestCase, t *testing.T) error {
 
-	fmt.Printf("%s Testing : %s, STATUS : TESTING", testCase.TestName, testCase.TestDetail)
+	fmt.Printf("%s Testing : %s, STATUS : TESTING\n", testCase.TestName, testCase.TestDetail)
 
 	requestBody, _ := json.Marshal(testCase.RequestMap)
 
@@ -40,12 +40,18 @@ func RunTest(testCase *TestCase, t *testing.T) error {
 	resultStatusCode := recorder.Result().StatusCode
 	utils.CompareInt(t, testCase.StatusCode, resultStatusCode)
 
-	obtainedResult := recorder.Body.String()
 	obtainedValueMap := make(map[string]interface{})
-	json.Unmarshal([]byte(obtainedResult), &obtainedValueMap)
+
+	json.Unmarshal([]byte(recorder.Body.String()), &obtainedValueMap)
+
+	//marshal and decode our expected map to json
+	typeCheckMap := make(map[string]interface{})
+	typeCheckJSON, _ := json.Marshal(testCase.TypeCheck)
+
+	json.Unmarshal(typeCheckJSON, &typeCheckMap)
 
 	//do type check for required fields
-	utils.CompareTypeMap(t, testCase.TypeCheck, obtainedValueMap)
+	utils.CompareTypeMap(t, typeCheckMap, obtainedValueMap)
 
 	// remove keys where value is dynamic, eg: token
 	obtainedValueMap, err := utils.RemoveKey(obtainedValueMap, testCase.AvoidKey)
@@ -55,6 +61,6 @@ func RunTest(testCase *TestCase, t *testing.T) error {
 
 	utils.CompareMaps(t, testCase.ResponseMap, obtainedValueMap)
 
-	fmt.Printf("%s Testing : %s, STATUS : FINISHED", testCase.TestName, testCase.TestDetail)
+	fmt.Printf("%s Testing : %s, STATUS : FINISHED\n", testCase.TestName, testCase.TestDetail)
 	return nil
 }
