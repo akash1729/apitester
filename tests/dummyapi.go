@@ -6,6 +6,7 @@ import (
 	"net/http"
 )
 
+// JSONError Writes error message to ResponseWriter
 func JSONError(w http.ResponseWriter, err interface{}, code int) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.Header().Set("X-Content-Type-Options", "nosniff")
@@ -13,6 +14,7 @@ func JSONError(w http.ResponseWriter, err interface{}, code int) {
 	fmt.Fprintf(w, `{"status":%q}`, err)
 }
 
+// DummyHandler Dummy Handler for testing golang-api-tester
 func DummyHandler(w http.ResponseWriter, r *http.Request) {
 
 	requestMap := make(map[string]interface{})
@@ -41,7 +43,7 @@ func DummyHandler(w http.ResponseWriter, r *http.Request) {
 
 	if requestMap["test case"] == "INCORRECT CASE" {
 
-		JSONError(w, "invalid case", http.StatusBadRequest)
+		JSONError(w, "INCORRECT", http.StatusBadRequest)
 
 	}
 }

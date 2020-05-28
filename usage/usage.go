@@ -1,21 +1,3 @@
-
-
-
-# golang-api-test : API testing package
-
-## Overview [![GoDoc](https://godoc.org/github.com/akash1729/golang-api-test?status.svg)](https://godoc.org/github.com/akash1729/golang-api-test)
-
-Package to unittest test golang API with json request and responses. 
-
-## Install
-
-```
-go get github.com/akash1729/golang-api-test
-```
-
-## Example
-
-```
 package usage
 
 import (
@@ -49,14 +31,3 @@ func GetUserTests() {
 	apitester.RunTest(testCase)
 
 }
-
-```
-
-## Author
-
-Akash Thomas
-
-## License
-
-MIT.
-

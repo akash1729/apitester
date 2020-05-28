@@ -8,6 +8,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+// RemoveKey Remove Values from the map based on the list of keys
 func RemoveKey(input map[string]interface{}, keys []string) (map[string]interface{}, error) {
 
 	for _, key := range keys {
@@ -21,39 +22,43 @@ func RemoveKey(input map[string]interface{}, keys []string) (map[string]interfac
 	return input, nil
 }
 
-func CompareInt(t *testing.T, expected int, obtained int) {
+// CompareInt Compare Two integers
+func CompareInt(t *testing.T, expected int, obtained int, message string) {
 
-	require.Equal(t, expected, obtained, "Status code does Not Match")
+	require.Equal(t, expected, obtained, message)
 }
 
-func CompareMaps(t *testing.T, expected map[string]interface{}, obtained map[string]interface{}) {
+// CompareMaps Compare content of two maps by converting it into json since api handles json data
+func CompareMaps(t *testing.T, expected map[string]interface{}, obtained map[string]interface{}, message string) {
 
 	expectedResultJSON, _ := json.Marshal(expected)
 	obtainedResultJSON, _ := json.Marshal(obtained)
-	require.JSONEq(t, string(expectedResultJSON), string(obtainedResultJSON))
+	require.JSONEq(t, string(expectedResultJSON), string(obtainedResultJSON), message)
 
 }
 
-func CompareTypeMap(t *testing.T, mapA map[string]interface{}, mapB map[string]interface{}) {
+// CompareTypeMap Compares type of elements in a map recursively
+func CompareTypeMap(t *testing.T, mapA map[string]interface{}, mapB map[string]interface{}, message string) {
 
 	for key, value := range mapA {
 
-		require.IsType(t, value, mapB[key])
+		require.IsType(t, value, mapB[key], message)
 
 		switch value.(type) {
 
 		case map[string]interface{}:
-			CompareTypeMap(t, value.(map[string]interface{}), mapB[key].(map[string]interface{}))
+			CompareTypeMap(t, value.(map[string]interface{}), mapB[key].(map[string]interface{}), message)
 
 		case []interface{}:
-			CompareTypeArray(t, value.([]interface{}), mapB[key].([]interface{}))
+			CompareTypeArray(t, value.([]interface{}), mapB[key].([]interface{}), message)
 
 		}
 	}
 
 }
 
-func CompareTypeArray(t *testing.T, arrA []interface{}, arrB []interface{}) {
+// CompareTypeArray Compare type of elements in an array recursively
+func CompareTypeArray(t *testing.T, arrA []interface{}, arrB []interface{}, message string) {
 
 	for index, value := range arrA {
 
@@ -61,10 +66,10 @@ func CompareTypeArray(t *testing.T, arrA []interface{}, arrB []interface{}) {
 		switch value.(type) {
 
 		case map[string]interface{}:
-			CompareTypeMap(t, value.(map[string]interface{}), arrB[index].(map[string]interface{}))
+			CompareTypeMap(t, value.(map[string]interface{}), arrB[index].(map[string]interface{}), message)
 
 		case []interface{}:
-			CompareTypeArray(t, value.([]interface{}), arrB[index].([]interface{}))
+			CompareTypeArray(t, value.([]interface{}), arrB[index].([]interface{}), message)
 		}
 	}
 
