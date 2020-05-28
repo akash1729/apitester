@@ -51,7 +51,7 @@ func GetUserTests() {
 
 ## Author
 
-ToDo.
+Akash Thomas
 
 ## License
 

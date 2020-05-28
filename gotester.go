@@ -11,7 +11,7 @@ import (
 	"github.com/akash1729/apitester/utils"
 )
 
-// TestCase Create a test case by creating instance of this struct
+// TestCase Create a test case by creating instance of this struct.
 // This structure is currently based on only json requests and responses
 type TestCase struct {
 	TestName    string                                       // name of the test, eg: GET Person
