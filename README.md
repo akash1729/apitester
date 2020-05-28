@@ -1,16 +1,13 @@
+# apitester : API testing package
 
-
-
-# golang-api-test : API testing package
-
-## Overview [![GoDoc](https://godoc.org/github.com/akash1729/golang-api-test?status.svg)](https://godoc.org/github.com/akash1729/golang-api-test)
+## Overview [![GoDoc](https://godoc.org/github.com/akash1729/apitester?status.svg)](https://godoc.org/github.com/akash1729/apitester)
 
 Package to unittest test golang API with json request and responses. 
 
 ## Install
 
 ```
-go get github.com/akash1729/golang-api-test
+go get github.com/akash1729/apitester
 ```
 
 ## Example
@@ -54,7 +51,7 @@ func GetUserTests() {
 
 ## Author
 
-Akash Thomas
+ToDo.
 
 ## License
 
