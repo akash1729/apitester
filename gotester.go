@@ -2,6 +2,7 @@ package apitester
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -14,16 +15,18 @@ import (
 // TestCase Create a test case by creating instance of this struct.
 // This structure is currently based on only json requests and responses
 type TestCase struct {
-	TestName    string                                       // name of the test, eg: GET Person
-	TestDetail  string                                       // case which is being tested, eg: Person with invalid DOB
-	Route       string                                       // Route, eg: /Person
-	Method      string                                       // HTTP method, eg: POST
-	HandlerFunc func(w http.ResponseWriter, r *http.Request) // handler function
-	StatusCode  int                                          // expected return status code
-	AvoidKey    []string                                     // Keys with dynamic values like token or timestamp, eg: ["token"]
-	RequestMap  map[string]interface{}                       // Request data that can be marshaled into json
-	ResponseMap map[string]interface{}                       // Response map that is unmarshaled from a json
-	TypeCheck   map[string]interface{}                       //  values for type check, only the types of values are compared. For testing values like token
+	TestName            string                                       // name of the test, eg: GET Person
+	TestDetail          string                                       // case which is being tested, eg: Person with invalid DOB
+	Route               string                                       // Route, eg: /Person
+	Method              string                                       // HTTP method, eg: POST
+	HandlerFunc         func(w http.ResponseWriter, r *http.Request) // handler function
+	StatusCode          int                                          // expected return status code
+	AvoidKey            []string                                     // Keys with dynamic values like token or timestamp, eg: ["token"]
+	RequestMap          map[string]interface{}                       // Request data that can be marshaled into json
+	ResponseMap         map[string]interface{}                       // Response map that is unmarshaled from a json
+	TypeCheck           map[string]interface{}                       // Values for type check, only the types of values are compared. For testing values like token
+	RequestContextKey   interface{}                                  // Key value to assign if request has context with values
+	RequestContextValue interface{}                                  // Value for context for the key
 
 }
 
@@ -37,6 +40,13 @@ func RunTest(testCase *TestCase, t *testing.T) error {
 	recorder := httptest.NewRecorder()
 
 	request, _ := http.NewRequest(testCase.Method, testCase.Route, bytes.NewReader(requestBody))
+
+	if testCase.RequestContextKey != nil {
+		// add context to the request
+		ctx := request.Context()
+		ctx = context.WithValue(ctx, testCase.RequestContextKey, testCase.RequestContextValue)
+		request = request.WithContext(ctx)
+	}
 
 	http.HandlerFunc(testCase.HandlerFunc).ServeHTTP(recorder, request)
 

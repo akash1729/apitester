@@ -27,6 +27,18 @@ func DummyHandler(w http.ResponseWriter, r *http.Request) {
 
 	if requestMap["test case"] == "CORRECT CASE" {
 
+		//test context
+		ctx := r.Context()
+		value := ctx.Value("requestID")
+		valueInt, ok := value.(int)
+		if !ok {
+			panic("failed to find context value")
+		}
+
+		if valueInt != 123 {
+			panic("context values does not match")
+		}
+
 		responseMap := map[string]interface{}{
 			"result":     "CORRECT",
 			"dummyValue": 1234,

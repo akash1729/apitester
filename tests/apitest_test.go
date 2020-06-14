@@ -26,6 +26,8 @@ func TestStatusCorrect(t *testing.T) {
 			"result":     "abc",
 			"dummyValue": 65,
 		},
+		RequestContextKey:   "requestID",
+		RequestContextValue: 123,
 	}
 
 	apitester.RunTest(&apiTest, t)
@@ -36,7 +38,7 @@ func TestStatusIncorrect(t *testing.T) {
 
 	apiTest := apitester.TestCase{
 		TestName:    "Testing",
-		TestDetail:  "CORRECT CASE",
+		TestDetail:  "INCORRECT CASE",
 		Route:       "/test_it",
 		Method:      "POST",
 		HandlerFunc: DummyHandler,
@@ -75,6 +77,8 @@ func TestErrorCall(t *testing.T) {
 			"result":     "abc",
 			"dummyValue": 65,
 		},
+		RequestContextKey:   "requestID",
+		RequestContextValue: 123,
 	}
 
 	apitester.RunTest(&apiTest, t)
