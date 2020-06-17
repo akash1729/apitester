@@ -22,12 +22,6 @@ func RemoveKey(input map[string]interface{}, keys []string) (map[string]interfac
 	return input, nil
 }
 
-// CompareInt Compare Two integers
-func CompareInt(t *testing.T, expected int, obtained int, message string) {
-
-	require.Equal(t, expected, obtained, message)
-}
-
 // CompareMaps Compare content of two maps by converting it into json since api handles json data
 func CompareMaps(t *testing.T, expected map[string]interface{}, obtained map[string]interface{}, message string) {
 
@@ -35,6 +29,11 @@ func CompareMaps(t *testing.T, expected map[string]interface{}, obtained map[str
 	obtainedResultJSON, _ := json.Marshal(obtained)
 	require.JSONEq(t, string(expectedResultJSON), string(obtainedResultJSON), message)
 
+}
+
+// CheckEqual Compare two values of any type
+func CheckEqual(t *testing.T, expected interface{}, obtained interface{}, message string) {
+	require.Equal(t, expected, obtained, message)
 }
 
 // CompareTypeMap Compares type of elements in a map recursively

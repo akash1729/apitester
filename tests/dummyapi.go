@@ -17,6 +17,17 @@ func JSONError(w http.ResponseWriter, err interface{}, code int) {
 // DummyHandler Dummy Handler for testing golang-api-tester
 func DummyHandler(w http.ResponseWriter, r *http.Request) {
 
+	dummyHeaderValue := r.Header.Get("DUMMY_HEADER")
+
+	if dummyHeaderValue != "header_value" {
+		panic("header did not match")
+	}
+
+	jsonHeader := r.Header.Get("Content-Type")
+	if jsonHeader != "application/json" {
+		panic("content type not json")
+	}
+
 	requestMap := make(map[string]interface{})
 	err := json.NewDecoder(r.Body).Decode(&requestMap)
 	if err != nil {
@@ -24,6 +35,7 @@ func DummyHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("DUMMY_HEADER", "response_header_value")
 
 	if requestMap["test case"] == "CORRECT CASE" {
 

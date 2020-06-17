@@ -22,11 +22,13 @@ type TestCase struct {
 	HandlerFunc         func(w http.ResponseWriter, r *http.Request) // handler function
 	StatusCode          int                                          // expected return status code
 	AvoidKey            []string                                     // Keys with dynamic values like token or timestamp, eg: ["token"]
+	RequestHeader       map[string]string                            // HTTP request header in key value pair map
 	RequestMap          map[string]interface{}                       // Request data that can be marshaled into json
+	ResponseHeader      map[string]string                            // HTTP response header in key value pair
 	ResponseMap         map[string]interface{}                       // Response map that is unmarshaled from a json
 	TypeCheck           map[string]interface{}                       // Values for type check, only the types of values are compared. For testing values like token
-	RequestContextKey   interface{}                                  // Key value to assign if request has context with values
-	RequestContextValue interface{}                                  // Value for context for the key
+	RequestContextKey   interface{}                                  // Key value for context if request has context with values. Context can be used to test controllers where request already has a value
+	RequestContextValue interface{}                                  // Value for context
 
 }
 
@@ -41,6 +43,14 @@ func RunTest(testCase *TestCase, t *testing.T) error {
 
 	request, _ := http.NewRequest(testCase.Method, testCase.Route, bytes.NewReader(requestBody))
 
+	// in header set default content type as json since api tester only supports json request
+
+	request.Header.Set("Content-Type", "application/json")
+
+	for key, value := range testCase.RequestHeader {
+		request.Header.Set(key, value)
+	}
+
 	if testCase.RequestContextKey != nil {
 		// add context to the request
 		ctx := request.Context()
@@ -52,7 +62,15 @@ func RunTest(testCase *TestCase, t *testing.T) error {
 
 	// Check Status Code
 	resultStatusCode := recorder.Result().StatusCode
-	utils.CompareInt(t, testCase.StatusCode, resultStatusCode, "Status code does Not Match")
+	utils.CheckEqual(t, testCase.StatusCode, resultStatusCode, "Status code does Not Match")
+
+	responseResult := recorder.Result()
+
+	for key, value := range testCase.ResponseHeader {
+
+		mapValue := responseResult.Header.Get(key)
+		utils.CheckEqual(t, mapValue, value, "header value not equal")
+	}
 
 	obtainedValueMap := make(map[string]interface{})
 

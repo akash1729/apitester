@@ -16,8 +16,14 @@ func TestStatusCorrect(t *testing.T) {
 		HandlerFunc: DummyHandler,
 		StatusCode:  200,
 		AvoidKey:    []string{"dummyValue"},
+		RequestHeader: map[string]string{
+			"dummy_header": "header_value",
+		},
 		RequestMap: map[string]interface{}{
 			"test case": "CORRECT CASE",
+		},
+		ResponseHeader: map[string]string{
+			"dummy_header": "response_header_value",
 		},
 		ResponseMap: map[string]interface{}{
 			"result": "CORRECT",
@@ -43,8 +49,14 @@ func TestStatusIncorrect(t *testing.T) {
 		Method:      "POST",
 		HandlerFunc: DummyHandler,
 		StatusCode:  400,
+		RequestHeader: map[string]string{
+			"dummy_header": "header_value",
+		},
 		RequestMap: map[string]interface{}{
 			"test case": "INCORRECT CASE",
+		},
+		ResponseHeader: map[string]string{
+			"dummy_header": "response_header_value",
 		},
 		ResponseMap: map[string]interface{}{
 			"status": "INCORRECT",
@@ -67,8 +79,14 @@ func TestErrorCall(t *testing.T) {
 		HandlerFunc: DummyHandler,
 		StatusCode:  200,
 		AvoidKey:    []string{"dummyValue"},
+		RequestHeader: map[string]string{
+			"dummy_header": "header_value",
+		},
 		RequestMap: map[string]interface{}{
 			"test case": "CORRECT CASE",
+		},
+		ResponseHeader: map[string]string{
+			"dummy_header": "response_header_value",
 		},
 		ResponseMap: map[string]interface{}{
 			"error": "CORRECT",
